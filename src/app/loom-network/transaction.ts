@@ -35,7 +35,7 @@ export async function getContract(privateKey, publicKey) {
  * スマートコントラクト内のキーとバリューの連想配列を格納
  * @param contract コントラクトのインスタンスが`getContract()`から返す
  */
-export async function store(contract, key, value) {
+export async function store(contract, key: string, value: string) {
   const params = new MapEntry();
   params.setKey(key);
   params.setValue(value);
@@ -46,7 +46,7 @@ export async function store(contract, key, value) {
  * スマートコントラクト内にあるキーと結び付けられたバリューをロードする。
  * @param contract コントラクトのインスタンスが`getContract()`から返す
  */
-export async function load(contract, key) {
+export async function load(contract, key: string) {
   const params = new MapEntry();
   // The smart contract will look up the value stored under this key.
   params.setKey(key);

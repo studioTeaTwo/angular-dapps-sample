@@ -1,6 +1,17 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
+import { CryptoUtils } from 'loom-js';
+
+import { getContract, store, load } from '../loom-network/transaction';
+
+interface Card {
+  key: number;
+  title: string;
+  cols: number;
+  rows: number;
+  price: number;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -13,25 +24,36 @@ export class DashboardComponent {
     map(({ matches }) => {
       if (matches) {
         return [
-          { title: 'Card 1', cols: 1, rows: 1 },
-          { title: 'Card 2', cols: 1, rows: 1 },
-          { title: 'Card 3', cols: 1, rows: 1 },
-          { title: 'Card 4', cols: 1, rows: 1 }
+          { key: 1, title: 'Card 1', cols: 1, rows: 1, price: 1 },
+          { key: 2, title: 'Card 2', cols: 1, rows: 1, price: 1 },
+          { key: 3, title: 'Card 3', cols: 1, rows: 1, price: 1 },
+          { key: 4, title: 'Card 4', cols: 1, rows: 1, price: 1 }
         ];
       }
 
       return [
-        { title: 'Card 1', cols: 2, rows: 1 },
-        { title: 'Card 2', cols: 1, rows: 1 },
-        { title: 'Card 3', cols: 1, rows: 2 },
-        { title: 'Card 4', cols: 1, rows: 1 }
+        { key: 1, title: 'Card 1', cols: 2, rows: 1, price: 1 },
+        { key: 2, title: 'Card 2', cols: 1, rows: 1, price: 1 },
+        { key: 3, title: 'Card 3', cols: 1, rows: 2, price: 1 },
+        { key: 4, title: 'Card 4', cols: 1, rows: 1, price: 1 }
       ];
     })
   );
 
   constructor(private breakpointObserver: BreakpointObserver) {}
 
-  onClickLike(card) {
+  onClickLike(card: Card) {
     console.log(card);
+    this.sendTransaction(card);
+  }
+
+  private async sendTransaction(card: Card) {
+    const privateKey = CryptoUtils.generatePrivateKey();
+    const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey);
+
+    const contract = await getContract(privateKey, publicKey);
+    await store(contract, card.key.toString(), card.price.toString());
+    const value = await load(contract, card.key.toString());
+    console.log('Value: ' + value);
   }
 }
