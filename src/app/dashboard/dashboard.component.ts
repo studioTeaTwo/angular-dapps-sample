@@ -1,59 +1,107 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
 import { CryptoUtils } from 'loom-js';
+import {
+  StackConfig,
+  Stack,
+  Card,
+  ThrowEvent,
+  DragEvent,
+  SwingStackComponent,
+  SwingCardComponent,
+} from 'angular2-swing';
 
-import { getContract, store, load } from '../loom-network/transaction';
+import { getUserAddress, getContract, like, disLike } from '../loom-network/transaction';
 
-interface Card {
+interface CardItem {
   key: number;
   title: string;
-  cols: number;
-  rows: number;
-  price: number;
 }
+
+type Action = 'like' | 'dislike';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { key: 1, title: 'Card 1', cols: 1, rows: 1, price: 1 },
-          { key: 2, title: 'Card 2', cols: 1, rows: 1, price: 1 },
-          { key: 3, title: 'Card 3', cols: 1, rows: 1, price: 1 },
-          { key: 4, title: 'Card 4', cols: 1, rows: 1, price: 1 }
-        ];
-      }
+export class DashboardComponent implements AfterViewInit {
+  @ViewChild('mySwing') swingStack: SwingStackComponent;
+  @ViewChildren('myCards') swingCards: QueryList<SwingCardComponent>;
 
-      return [
-        { key: 1, title: 'Card 1', cols: 2, rows: 1, price: 1 },
-        { key: 2, title: 'Card 2', cols: 1, rows: 1, price: 1 },
-        { key: 3, title: 'Card 3', cols: 1, rows: 2, price: 1 },
-        { key: 4, title: 'Card 4', cols: 1, rows: 1, price: 1 }
-      ];
-    })
-  );
+  cards: CardItem[] = [
+    { key: 1, title: 'Card 1' },
+    { key: 2, title: 'Card 2' },
+    { key: 3, title: 'Card 3' },
+    { key: 4, title: 'Card 4' },
+    { key: 5, title: 'Card 5' },
+  ].reverse();
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  stackConfig = {
+    throwOutConfidence: (offset: number, targetElement: HTMLElement) => {
+      // you would put ur logic based on offset & targetelement to determine
+      // what is your throwout confidence
+      return 1;
+    },
+    minThrowOutDistance: 700    // default value is 400
+  };
 
-  onClickLike(card: Card) {
-    console.log(card);
-    this.sendTransaction(card);
+  constructor() {}
+
+  ngAfterViewInit() {
+    // ViewChild & ViewChildren are only available
+    // in this function
+
+    // we can get the underlying stack
+    // which has methods - createCard, destroyCard, getCard etc
+    // console.log(this.swingStack.stack);
+
+    // and the cards
+    // every card has methods - destroy, throwIn, throwOut etc
+    // this.swingCards.forEach((c) => console.log(c.getCard()));
+
+    // this is how you can manually hook up to the
+    // events instead of providing the event method in the template
+    // this.swingStack.throwoutleft.subscribe(
+    //   (event: ThrowEvent) => console.log('Manual hook: ', event));
+
+    // this.swingStack.dragstart.subscribe((event: DragEvent) => console.log(event));
+    // this.swingStack.dragmove.subscribe((event: DragEvent) => console.log(event));
   }
 
-  private async sendTransaction(card: Card) {
+  onClickLike(card: CardItem) {
+    console.log('❤️', card);
+    this.sendTransaction(card, 'like');
+  }
+
+  onClickDisLike(card: CardItem) {
+    console.log('🙅‍♂️', card);
+    this.sendTransaction(card, 'dislike');
+  }
+
+  onThrowoutLeft(event: ThrowEvent) {
+    console.log('left throw out', event);
+    const index = +event.target.className - 1;
+    this.sendTransaction(this.cards[index], 'dislike');
+  }
+
+  onThrowoutRight(event: ThrowEvent) {
+    console.log('right throw out', event);
+    const index = +event.target.className - 1;
+    this.sendTransaction(this.cards[index], 'like');
+  }
+
+  private async sendTransaction(card: CardItem, action: Action): Promise<void> {
     const privateKey = CryptoUtils.generatePrivateKey();
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey);
 
-    const contract = await getContract(privateKey, publicKey);
-    await store(contract, card.key.toString(), card.price.toString());
-    const value = await load(contract, card.key.toString());
-    console.log('Value: ' + value);
+    const address = await getUserAddress(publicKey);
+    const contract = await getContract(address, privateKey, publicKey);
+    if (action === 'like') {
+      await like(address, contract, card.key);
+    } else {
+      await disLike(address, contract, card.key);
+    }
   }
 }
