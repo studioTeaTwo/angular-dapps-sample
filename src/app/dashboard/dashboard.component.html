@@ -1,7 +1,12 @@
-<div class="grid-container">
+<div class="grid-container" swing-stack #mySwing
+  [stackConfig]="stackConfig"
+  (throwoutleft)="onThrowoutLeft($event)"
+  (throwoutright)="onThrowoutRight($event)"
+>
   <h1 class="mat-h1">Dashboard</h1>
   <mat-grid-list cols="1" rowHeight="300px">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
+      <div [ngClass]="card.key.toString()" swing-card #myCards *ngFor="let card of cards">
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
@@ -29,6 +34,7 @@
           </button>
         </mat-card-actions>
       </mat-card>
+      </div>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
