@@ -23,7 +23,7 @@ export async function getContract(currentUserAddress, privateKey, publicKey) {
     'ws://127.0.0.1:9999/queryws'
   );
 
-  const web3 = new Web3(new LoomProvider(client, privateKey));
+  const web3 = new Web3(new LoomProvider(client, privateKey) as any);
   const networkId = await web3.eth.net.getId();
   const currentNetwork = Matching.networks[networkId];
   const ABI = Matching.abi;
