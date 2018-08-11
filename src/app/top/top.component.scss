@@ -1,0 +1,22 @@
+h1 {
+  font-family: "Times New Roman";
+  font-style: italic;
+  font-size: 3em;
+  color: palevioletred;
+
+  margin: 32px;
+}
+
+.image-wrapper {
+  text-align: center;
+  img {
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.4);
+  }
+}
+
+.button-wrapper {
+  position: absolute;
+  top: 55%;
+  left: 40%;
+  text-align: center;
+}
