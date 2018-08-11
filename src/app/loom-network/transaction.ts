@@ -14,7 +14,7 @@ export async function getUserAddress(publicKey) {
   return LocalAddress.fromPublicKey(publicKey).toString();
 }
 /**
- * 
+ *
  */
 export async function getContract(currentUserAddress, privateKey, publicKey) {
   const client = new Client(
@@ -46,7 +46,7 @@ export async function like(address, contract, key: string) {
  *
  */
 export async function disLike(address, contract, key: string) {
-  await contract.methods.like(1).send({
+  await contract.methods.disLike(1).send({
     from: address
   });
 }
