@@ -14,10 +14,7 @@ export async function getUserAddress(publicKey) {
   return LocalAddress.fromPublicKey(publicKey).toString();
 }
 /**
- * 新たな`Contract`インスタンスを作成し、スマートコントラクトとの対話に使えるようにする。
- * @param privateKey(秘密鍵)はコントラクトに送信されたトランザクションに署名するために使われる。
- * @param publicKey(公開鍵)は秘密鍵に対応するものである。
- * @returns `Contract`のインスタンス
+ * 
  */
 export async function getContract(currentUserAddress, privateKey, publicKey) {
   const client = new Client(
@@ -37,8 +34,7 @@ export async function getContract(currentUserAddress, privateKey, publicKey) {
 }
 
 /**
- * スマートコントラクト内のキーとバリューの連想配列を格納
- * @param contract コントラクトのインスタンスが`getContract()`から返す
+ *
  */
 export async function like(address, contract, key: string) {
   await contract.methods.like(1).send({
@@ -47,8 +43,7 @@ export async function like(address, contract, key: string) {
 }
 
 /**
- * スマートコントラクト内にあるキーと結び付けられたバリューをロードする。
- * @param contract コントラクトのインスタンスが`getContract()`から返す
+ *
  */
 export async function disLike(address, contract, key: string) {
   await contract.methods.like(1).send({
