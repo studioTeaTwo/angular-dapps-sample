@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointState, BreakpointObserver } from '@angular/cdk/layout';
 import { CryptoUtils } from 'loom-js';
 
-import { getContract, store, load } from '../loom-network/transaction';
+import { getUserAddress, getContract, like, disLike } from '../loom-network/transaction';
 
 interface Card {
   key: number;
@@ -42,9 +42,8 @@ export class DashboardComponent {
     const privateKey = CryptoUtils.generatePrivateKey();
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey);
 
-    const contract = await getContract(privateKey, publicKey);
-    await store(contract, card.key.toString(), card.price.toString());
-    const value = await load(contract, card.key.toString());
-    console.log('Value: ' + value);
+    const address = await getUserAddress(publicKey);
+    const contract = await getContract(address, privateKey, publicKey);
+    await like(address, contract, "1");
   }
 }
