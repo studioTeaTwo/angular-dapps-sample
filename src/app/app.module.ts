@@ -5,13 +5,16 @@ import { MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, MatButt
 import { LayoutModule } from '@angular/cdk/layout';
 import { SwingModule } from 'angular2-swing';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { TopComponent } from './top/top.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
+    TopComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
+    AppRoutingModule,
     SwingModule,
   ],
   providers: [],

@@ -34,7 +34,7 @@ export class DashboardComponent implements AfterViewInit {
     { key: 3, title: 'Card 3' },
     { key: 4, title: 'Card 4' },
     { key: 5, title: 'Card 5' },
-  ];
+  ].reverse();
 
   stackConfig = {
     throwOutConfidence: (offset: number, targetElement: HTMLElement) => {
