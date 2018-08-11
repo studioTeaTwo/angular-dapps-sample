@@ -3,7 +3,7 @@
   (throwoutleft)="onThrowoutLeft($event)"
   (throwoutright)="onThrowoutRight($event)"
 >
-  <h1 class="mat-h1">Dashboard</h1>
+  <h1 class="mat-h1">Paradise or Hell?</h1>
   <mat-grid-list cols="1" rowHeight="300px">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
       <div [ngClass]="card.key.toString()" swing-card #myCards *ngFor="let card of cards">
@@ -31,6 +31,12 @@
           </button>
           <button mat-button (click)="onClickLike(card)">
             <mat-icon [style.color]="'red'">favorite</mat-icon>
+          </button>
+          <button mat-button>
+            <mat-icon>report</mat-icon>
+          </button>
+          <button mat-button>
+            <mat-icon>payment</mat-icon>
           </button>
         </mat-card-actions>
       </mat-card>

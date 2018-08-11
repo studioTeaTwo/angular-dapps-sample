@@ -1,5 +1,11 @@
+.mat-h1 {
+  font-family: "Times New Roman";
+  font-style: italic;
+  color: palevioletred;
+}
+
 .grid-container {
-  margin: 8px;
+  margin: 5px;
 }
 
 .dashboard-card {
@@ -18,9 +24,13 @@
 
 .dashboard-card-content {
   text-align: center;
+  .avatar {
+    width: 20em;
+    // height: 12em;
+  }
 }
 
-.avatar {
-  width: 20em;
-  // height: 12em;
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
 }
