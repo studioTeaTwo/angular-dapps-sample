@@ -19,6 +19,8 @@ interface CardItem {
   title: string;
 }
 
+type Action = 'like' | 'dislike';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -28,7 +30,7 @@ export class DashboardComponent implements AfterViewInit {
   @ViewChild('mySwing') swingStack: SwingStackComponent;
   @ViewChildren('myCards') swingCards: QueryList<SwingCardComponent>;
 
-  cards = [
+  cards: CardItem[] = [
     { key: 1, title: 'Card 1' },
     { key: 2, title: 'Card 2' },
     { key: 3, title: 'Card 3' },
@@ -70,27 +72,36 @@ export class DashboardComponent implements AfterViewInit {
 
   onClickLike(card: CardItem) {
     console.log('❤️', card);
-    this.sendTransaction(card);
+    this.sendTransaction(card, 'like');
   }
 
   onClickDisLike(card: CardItem) {
     console.log('🙅‍♂️', card);
+    this.sendTransaction(card, 'dislike');
   }
 
   onThrowoutLeft(event: ThrowEvent) {
-    console.log('left throw out', event.throwDirection);
+    console.log('left throw out', event);
+    const index = +event.target.className - 1;
+    this.sendTransaction(this.cards[index], 'dislike');
   }
 
   onThrowoutRight(event: ThrowEvent) {
-    console.log('right throw out', event.throwDirection);
+    console.log('right throw out', event);
+    const index = +event.target.className - 1;
+    this.sendTransaction(this.cards[index], 'like');
   }
 
-  private async sendTransaction(card: CardItem) {
+  private async sendTransaction(card: CardItem, action: Action): Promise<void> {
     const privateKey = CryptoUtils.generatePrivateKey();
     const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey);
 
     const address = await getUserAddress(publicKey);
     const contract = await getContract(address, privateKey, publicKey);
-    await like(address, contract, "1");
+    if (action === 'like') {
+      await like(address, contract, card.key);
+    } else {
+      await disLike(address, contract, card.key);
+    }
   }
 }

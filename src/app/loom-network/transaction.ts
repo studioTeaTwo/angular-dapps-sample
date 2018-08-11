@@ -36,8 +36,8 @@ export async function getContract(currentUserAddress, privateKey, publicKey) {
 /**
  *
  */
-export async function like(address, contract, key: string) {
-  await contract.methods.like(1).send({
+export async function like(address, contract, key: number) {
+  await contract.methods.like(key).send({
     from: address
   });
 }
@@ -45,8 +45,8 @@ export async function like(address, contract, key: string) {
 /**
  *
  */
-export async function disLike(address, contract, key: string) {
-  await contract.methods.disLike(1).send({
+export async function disLike(address, contract, key: number) {
+  await contract.methods.disLike(key).send({
     from: address
   });
 }

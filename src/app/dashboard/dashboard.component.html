@@ -6,7 +6,7 @@
   <h1 class="mat-h1">Dashboard</h1>
   <mat-grid-list cols="1" rowHeight="300px">
     <mat-grid-tile [colspan]="1" [rowspan]="2">
-      <div [ngClass]="card.title" swing-card #myCards *ngFor="let card of cards">
+      <div [ngClass]="card.key.toString()" swing-card #myCards *ngFor="let card of cards">
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-card-title>
