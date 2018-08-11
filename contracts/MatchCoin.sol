@@ -1,8 +1,8 @@
 pragma solidity ^0.4.23;
 
-import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
-import "zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
-import "zeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
+import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
+import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
+import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
 
 contract MatchCoin is  MintableToken, BurnableToken {
     string public name = "MatchCoin";
